@@ -12,7 +12,7 @@
 	<artifactId>projeto-service-dto</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>projeto-service-dto</name>
-	<description>Projeto para aprendizado do Spring services-dto</description>
+	<description>Novo projeto testando github</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
