@@ -8,12 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 	
-	@ExceptionHandler(EmailException.class)
-	
-	protected ResponseEntity<Object> handleEmailExecption(EmailException ex){
-		EmailException emailException = new EmailException(ex.getMessage());
-		return ResponseEntity.unprocessableEntity().body(emailException);
-		
+	@ExceptionHandler(EmailException.class)	
+	protected ResponseEntity<Object> handleEmailExecption(EmailException ex){				
+		return ResponseEntity.unprocessableEntity().body(ex.getMessage());		
 	}
-
 }
