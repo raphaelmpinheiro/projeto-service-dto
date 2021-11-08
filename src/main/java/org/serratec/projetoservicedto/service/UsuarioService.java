@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.serratec.projetoservicedto.CriptografiaService;
+import org.serratec.projetoservicedto.config.MailConfig;
 import org.serratec.projetoservicedto.dominio.Usuario;
 import org.serratec.projetoservicedto.exception.EmailException;
 import org.serratec.projetoservicedto.repositorio.UsuarioRepository;
@@ -19,6 +20,9 @@ public class UsuarioService {
 	@Autowired
 	private CriptografiaService criptografiaService;
 	
+	@Autowired
+	private MailConfig mailConf;
+	
 	public List<Usuario> listar(){
 		return usuarioRepository.findAll();
 	}
@@ -33,6 +37,9 @@ public class UsuarioService {
 			throw new EmailException("Usuário com este e-mail já existe no cadastro.");			
 		}		
 		user.setSenha(criptografiaService.criptografar(user.getSenha()));
-		return usuarioRepository.save(user);
+		Usuario usuarioSalvo =  usuarioRepository.save(user);
+		mailConf.sendMail(usuarioSalvo.getEmail(), "Cadastro de usuário", usuarioSalvo.toString());
+		return usuarioSalvo;
+		
 	}
 }
