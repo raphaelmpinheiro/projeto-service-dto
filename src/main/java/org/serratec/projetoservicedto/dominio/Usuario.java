@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Usuario {
@@ -19,6 +21,10 @@ public class Usuario {
 	private String nome;
 	private String email;
 	private String senha;
+	
+	@ManyToOne
+	@JoinColumn(name="id_endereco")
+	private Endereco endereco;
 				
 	public Usuario() {
 		
@@ -30,7 +36,15 @@ public class Usuario {
 		this.email = email;
 		this.senha = senha;
 	}
-	
+		
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
 	public long getId() {
 		return this.id;
 	}
@@ -78,4 +92,10 @@ public class Usuario {
 	public String toString() {
 		return "Usuário: " + this.getEmail() + " - " + "Nome: " + this.getNome();
 	}
+	
+	
+	//Planilha
+	//Nome
+	//Rua
+	//CEP
 }

@@ -55,7 +55,11 @@ public class UsuarioController {
 		Usuario usuario = usuarioInserirDTO.createUsuario();
 		usuario = usuarioService.inserir(usuario);
 		// Gerar uma URI /api/usuario/{id} - valor do Id que foi criado.
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuario.getId())
+		URI uri = 
+				ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(usuario.getId())
 				.toUri();
 
 		return ResponseEntity.created(uri).body(new UsuarioDTO(usuario));
