@@ -13,6 +13,7 @@ import org.serratec.projetoservicedto.exception.EmailException;
 import org.serratec.projetoservicedto.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class UsuarioController {
 	@Autowired
 	UsuarioService usuarioService;
 
-	@GetMapping
+	@GetMapping		
 	public ResponseEntity<Object> get() {
 		List<Usuario> usuarios = usuarioService.listar();		
 		return ResponseEntity.ok(UsuarioDTO.convert(usuarios));
@@ -36,6 +37,7 @@ public class UsuarioController {
 	
 
 	@GetMapping("{id}")
+	@PreAuthorize("hasRole('admin')")
 	public ResponseEntity<Object> get(@PathVariable("id") long id) {
 		Optional<Usuario> usuario = usuarioService.getById(id);
 		
@@ -50,6 +52,7 @@ public class UsuarioController {
 	@PostMapping
 	// Retornar 201 - Created
 	// Retornar 422 - Não foi possivel processar a requisição.
+	@PreAuthorize("hasRole('admin') && hasRole('usuario')")
 	public ResponseEntity<Object> criar(@RequestBody UsuarioInserirDTO usuarioInserirDTO) {
 
 		Usuario usuario = usuarioInserirDTO.createUsuario();
