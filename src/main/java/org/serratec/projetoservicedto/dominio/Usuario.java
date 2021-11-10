@@ -2,13 +2,17 @@ package org.serratec.projetoservicedto.dominio;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 public class Usuario {
@@ -25,11 +29,23 @@ public class Usuario {
 	@ManyToOne
 	@JoinColumn(name="id_endereco")
 	private Endereco endereco;
+	    
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY, optional = false)
+	private Foto foto;
 				
 	public Usuario() {
 		
 	}
-	
+		
+	public Foto getFoto() {
+		return foto;
+	}
+
+	public void setFoto(Foto foto) {
+		this.foto = foto;
+	}
+
 	public Usuario(String nome, String email, String senha) {
 		super();		
 		this.nome = nome;

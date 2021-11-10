@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// /servico/usuario/ - ok
 		// /api/usuario/1/todos - falha
 		// /api/pessoas/usuario/1 - ok		
+		.antMatchers("/h2-console/**").anonymous()
 		.antMatchers("/*/usuario/**").authenticated()
 		.antMatchers("/*/cep/**").authenticated()
 		.anyRequest().authenticated()		
