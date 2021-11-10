@@ -32,13 +32,13 @@ public class UsuarioService {
 	}
 	
 	public Usuario inserir(Usuario user) throws EmailException {
-		Usuario usuario = usuarioRepository.findByEmail(user.getEmail());
-		if(usuario != null) {
+		Optional<Usuario> usuario = usuarioRepository.findByEmail(user.getEmail());
+		if(usuario.isPresent()) {
 			throw new EmailException("Usuário com este e-mail já existe no cadastro.");			
 		}		
 		user.setSenha(criptografiaService.criptografar(user.getSenha()));
 		Usuario usuarioSalvo =  usuarioRepository.save(user);
-		mailConf.sendMail(usuarioSalvo.getEmail(), "Cadastro de usuário", usuarioSalvo.toString());
+		//mailConf.sendMail(usuarioSalvo.getEmail(), "Cadastro de usuário", usuarioSalvo.toString());
 		return usuarioSalvo;
 		
 	}

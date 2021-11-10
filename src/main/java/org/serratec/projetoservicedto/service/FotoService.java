@@ -29,8 +29,9 @@ public class FotoService {
 		return fotoRepository.save(foto);
 	}
 	
-	public Foto buscar(Long id) {
+	public Foto buscar(Long id) {				
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
+				
 		if(usuario.isPresent()) {
 			Foto foto = usuario.get().getFoto();
 			return foto;			

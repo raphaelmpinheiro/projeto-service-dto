@@ -1,8 +1,10 @@
 package org.serratec.projetoservicedto.config;
 
+import org.serratec.projetoservicedto.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,18 +18,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	
-	//Método para criação dos usuários.
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-		.withUser("raphael").password(passwordEncoder().encode("123456")).roles("usuario")
-		.and()
-		.withUser("admin").password(passwordEncoder().encode("321")).roles("admin", "usuario")
-		.and()
-		.withUser("master").password(passwordEncoder().encode("abc")).roles("admin");	
 
+	@Autowired
+	CustomUserDetailsService customUserDetailsService;
+	
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {		
+		auth.userDetailsService(customUserDetailsService)
+		.passwordEncoder(passwordEncoder());	
 	}
+	
+	
+	
+// Teoricamente o método está obsoleto.
+	//Método para criação dos usuários.
+//	@Autowired
+//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication()
+//		.withUser("raphael").password(passwordEncoder().encode("123456")).roles("usuario")
+//		.and()
+//		.withUser("admin").password(passwordEncoder().encode("321")).roles("admin", "usuario")
+//		//role = admin -> ROLE_admin
+//		.and()
+//		.withUser("master").password(passwordEncoder().encode("abc")).roles("admin");	
+//
+//	}
 		
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -38,8 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// /servico/usuario/ - ok
 		// /api/usuario/1/todos - falha
 		// /api/pessoas/usuario/1 - ok		
-		.antMatchers("/h2-console/**").anonymous()
-		.antMatchers("/*/usuario/**").authenticated()
+		.antMatchers( "/h2-console/**").anonymous()		
+		.antMatchers(HttpMethod.POST, "/*/usuario/**").anonymous()
+		.antMatchers( "/*/usuario/**").authenticated()
 		.antMatchers("/*/cep/**").authenticated()
 		.anyRequest().authenticated()		
 		.and()

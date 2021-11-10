@@ -44,6 +44,7 @@ public class UsuarioController {
 	FotoService fotoService;
 
 	@GetMapping
+	@PreAuthorize("hasRole('usuario')")
 	public ResponseEntity<Object> get() {
 		List<Usuario> usuarios = usuarioService.listar();
 		return ResponseEntity.ok(UsuarioDTO.convert(usuarios));
@@ -51,8 +52,12 @@ public class UsuarioController {
 
 	@GetMapping("{id}")
 	@PreAuthorize("hasRole('admin')")
-	public ResponseEntity<Object> get(@PathVariable("id") long id, @AuthenticationPrincipal UserDetails user) {
+	public ResponseEntity<Object> get(@PathVariable("id") long id, 
+			@AuthenticationPrincipal UserDetails user) {
 
+		
+		//Pega todas as roles do usuário.
+		System.out.println(user.getAuthorities());		
 		System.out.println(user.getUsername());
 		System.out.println(user.getPassword());
 
@@ -68,10 +73,11 @@ public class UsuarioController {
 	@PostMapping
 	// Retornar 201 - Created
 	// Retornar 422 - Não foi possivel processar a requisição.
-	@PreAuthorize("hasRole('admin') && hasRole('usuario')")
+	//@PreAuthorize("hasRole('admin') && hasRole('usuario')")
 	public ResponseEntity<Object> criar(@RequestBody UsuarioInserirDTO usuarioInserirDTO) {
 
 		Usuario usuario = usuarioInserirDTO.createUsuario();
+		usuario.setFuncao("ROLE_usuario");
 		usuario = usuarioService.inserir(usuario);
 
 		// Gerar uma URI /api/usuario/{id} - valor do Id que foi criado.
