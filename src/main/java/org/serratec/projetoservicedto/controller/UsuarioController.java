@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import javax.websocket.server.PathParam;
+
 import org.apache.logging.log4j.util.Strings;
 import org.serratec.projetoservicedto.dominio.Foto;
 import org.serratec.projetoservicedto.dominio.Usuario;
@@ -14,9 +16,13 @@ import org.serratec.projetoservicedto.dto.FotoDTO;
 import org.serratec.projetoservicedto.dto.UsuarioDTO;
 import org.serratec.projetoservicedto.dto.UsuarioInserirDTO;
 import org.serratec.projetoservicedto.exception.EmailException;
+import org.serratec.projetoservicedto.repositorio.UsuarioRepository;
 import org.serratec.projetoservicedto.service.FotoService;
 import org.serratec.projetoservicedto.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +42,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
+	
+	@Autowired
+	UsuarioRepository usuarioRepository;
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -118,5 +127,35 @@ public class UsuarioController {
 
 		return ResponseEntity.notFound().build();
 
+	}
+	
+	@GetMapping("/pagina")
+	public ResponseEntity<Page<Usuario>> buscarPaginado(@PageableDefault(size = 10, sort = "nome") Pageable pagina){						
+		Page<Usuario> usuarios = usuarioRepository.findAll(pagina);
+		return ResponseEntity.ok(usuarios);
+		
+	}
+	
+	@GetMapping("/busca-por-idade")
+	public ResponseEntity<Page<Usuario>> buscarPaginado(			
+			@RequestParam(defaultValue = "0") int idadeInicial, 
+			@RequestParam(defaultValue = "200") int idadeFinal, 
+			@PageableDefault(size = 10, sort = "nome") Pageable pagina){
+		
+		Page<Usuario> usuarios = usuarioRepository
+				.findByIdadeBetween(idadeInicial, idadeFinal, pagina);
+		
+		return ResponseEntity.ok(usuarios);		
+	}
+	
+	@GetMapping("/busca-por-nome")
+	public ResponseEntity<Page<Usuario>> buscarPorNomePaginado(			
+			@RequestParam(defaultValue = "") String parteDoNome, 			
+			@PageableDefault(size = 10, sort = "nome") Pageable pagina){
+		
+		Page<Usuario> usuarios = usuarioRepository
+				.findByNomeContainingIgnoreCase(parteDoNome, pagina);
+		
+		return ResponseEntity.ok(usuarios);		
 	}
 }

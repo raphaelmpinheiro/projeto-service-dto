@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		.antMatchers( "/h2-console/**").anonymous()		
 		.antMatchers(HttpMethod.POST, "/*/usuario/**").anonymous()
-		.antMatchers( "/*/usuario/**").authenticated()
+		.antMatchers( "/*/usuario/**").anonymous()
 		.antMatchers("/*/cep/**").authenticated()
 		//.anyRequest().authenticated()		
 		.and()
