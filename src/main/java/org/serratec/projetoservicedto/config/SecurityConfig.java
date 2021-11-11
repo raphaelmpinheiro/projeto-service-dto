@@ -52,12 +52,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// /api/usuario/ - ok
 		// /servico/usuario/ - ok
 		// /api/usuario/1/todos - falha
-		// /api/pessoas/usuario/1 - ok		
+		// /api/pessoas/usuario/1 - ok					
+		// /*/categoria/**
+		
+//		.antMatchers(HttpMethod.POST, "/api/**").anonymous()
+//		.antMatchers(HttpMethod.GET, "/*/categoria/**").anonymous()
+//		.antMatchers(HttpMethod.PUT, "/*/categoria/**").authenticated()
+//		.antMatchers(HttpMethod.DELETE, "/*/categoria/**").authenticated()
+		
 		.antMatchers( "/h2-console/**").anonymous()		
 		.antMatchers(HttpMethod.POST, "/*/usuario/**").anonymous()
 		.antMatchers( "/*/usuario/**").authenticated()
 		.antMatchers("/*/cep/**").authenticated()
-		.anyRequest().authenticated()		
+		//.anyRequest().authenticated()		
 		.and()
 		.csrf().disable() // https://owasp.org/www-community/attacks/csrf#
 		.formLogin().disable()
